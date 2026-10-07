@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AMSチェック｜男性更年期セルフチェック</title>
+<style>
+:root{--bg:#ffffff;--card:#fff;--ink:#23424a;--sub:#6b8a92;--main:#19a7b5;--main2:#e0f5f7;--line:#d3e8ec;--ok:#2fa67a;--warn:#e8a317;--mid:#ef7d3c;--bad:#d9534f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:640px;margin:0 auto;padding:16px 16px 120px}
+header{text-align:center;padding:24px 8px 8px}
+.badge{display:inline-block;background:var(--main2);color:var(--main);font-weight:700;font-size:12px;padding:4px 12px;border-radius:99px}
+h1{font-size:24px;margin:10px 0 6px}
+header p{color:var(--sub);font-size:14px;margin:0}
+.q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px;box-shadow:0 2px 8px rgba(25,167,181,.06)}
+.q.done{border-color:var(--main)}
+.qt{font-weight:700;font-size:15px}
+.qt small{display:block;color:var(--sub);font-weight:400;font-size:12px;margin-top:2px}
+.n{color:var(--main);margin-right:6px}
+.opts{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px}
+.opts button{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:8px 0;font-size:11px;cursor:pointer;font-family:inherit;line-height:1.3}
+.opts button b{display:block;font-size:17px;color:var(--main)}
+.opts button.on{background:var(--main);border-color:var(--main);color:#fff}
+.opts button.on b{color:#fff}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.bar div.in{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.prog{flex:1}
+.prog span{font-size:12px;color:var(--sub)}
+.track{height:8px;background:var(--main2);border-radius:9px;overflow:hidden;margin-top:4px}
+.fill{height:100%;width:0;background:var(--main);transition:width .25s}
+.go{background:var(--main);color:#fff;border:0;border-radius:12px;padding:12px 18px;font-weight:700;font-size:15px;font-family:inherit;cursor:pointer}
+.go:disabled{opacity:.4;cursor:default}
+#res{display:none;background:var(--card);border:2px solid var(--main);border-radius:20px;padding:22px 18px;margin-top:20px;text-align:center}
+.score{font-size:56px;font-weight:800;line-height:1.1}
+.score small{font-size:16px;color:var(--sub);font-weight:400}
+.lv{display:inline-block;color:#fff;font-weight:700;padding:5px 16px;border-radius:99px;margin:8px 0}
+.scale{display:flex;height:10px;border-radius:9px;overflow:hidden;margin:16px 0 4px;position:relative}
+.scale i{display:block}
+.pin{position:absolute;top:-4px;width:4px;height:18px;background:var(--ink);border-radius:2px}
+.lab{display:flex;font-size:10px;color:var(--sub)}
+#msg{text-align:left;font-size:14px;margin:14px 0 0}
+.re{margin-top:14px;background:transparent;border:1.5px solid var(--main);color:var(--main);border-radius:12px;padding:10px 18px;font-weight:700;cursor:pointer;font-family:inherit}
+.note{font-size:12px;color:var(--sub);margin-top:20px;padding:0 4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<span class="badge">所要時間 約3分</span>
+<h1>AMSチェック</h1>
+<p>男性更年期（LOH症候群）のセルフチェック<br>この半年〜1年の状態で、あてはまる程度をタップしてください</p>
+</header>
+<div id="list"></div>
+<div id="res">
+<div>あなたの合計点</div>
+<div class="score"><span id="sc">0</span><small> / 85点</small></div>
+<div class="lv" id="lv"></div>
+<div class="scale" id="scale"><i style="width:14.7%;background:var(--ok)"></i><i style="width:14.7%;background:var(--warn)"></i><i style="width:19.1%;background:var(--mid)"></i><i style="flex:1;background:var(--bad)"></i><span class="pin" id="pin"></span></div>
+<div class="lab"><span style="width:14.7%">17</span><span style="width:14.7%">27</span><span style="width:19.1%">37</span><span style="flex:1">50〜85</span></div>
+<p id="msg"></p>
+<button class="re" onclick="reset()">もう一度チェックする</button>
+</div>
+<p class="note">※ AMS（Aging Males' Symptoms scale）は、症状の程度をおおまかに把握するための質問票です。診断ではありません。点数が高い場合や症状が気になる場合は、泌尿器科・男性更年期外来などの医療機関にご相談ください。回答はこのページ内でのみ使われ、保存・送信されません。</p>
+</div>
+<div class="bar"><div class="in">
+<div class="prog"><span id="pt">0 / 17 回答</span><div class="track"><div class="fill" id="fl"></div></div></div>
+<button class="go" id="go" disabled onclick="show()">結果を見る</button>
+</div></div>
+<script>
+const Q=[
+["総合的に調子が思わしくない","健康状態、本人の感じ方"],
+["関節や筋肉の痛み","腰痛、関節痛、手足・背中の痛み"],
+["ひどい汗","突然汗が出る、運動と関係なくほてる"],
+["睡眠の悩み","寝つきが悪い、眠りが浅い、朝早く目が覚める"],
+["よく眠くなる、疲れを感じる",""],
+["イライラする","怒りっぽい、些細なことで不機嫌になる"],
+["神経質になった","緊張しやすい、落ち着かない"],
+["不安感","パニック状態になることがある"],
+["体の疲れ・行動力の低下","活動量の減少、何事にも興味がわかない"],
+["筋力の低下",""],
+["憂うつな気分","落ち込み、悲しみ、涙もろい、意欲がわかない"],
+["「人生の絶頂期は過ぎた」と感じる",""],
+["力尽きた、どん底にいると感じる",""],
+["ひげの伸びが遅くなった",""],
+["性的能力の衰え",""],
+["朝立ちの回数が減った",""],
+["性欲の低下","性交への欲求がわかない、楽しくない"]];
+const L=["なし","軽い","中程度","強い","非常に強い"];
+const A=Array(17).fill(0);
+const list=document.getElementById('list');
+Q.forEach((q,i)=>{const d=document.createElement('div');d.className='q';d.id='q'+i;
+d.innerHTML=`<div class="qt"><span class="n">Q${i+1}</span>${q[0]}${q[1]?`<small>${q[1]}</small>`:''}</div><div class="opts">${L.map((l,k)=>`<button onclick="pick(${i},${k+1})"><b>${k+1}</b>${l}</button>`).join('')}</div>`;
+list.appendChild(d)});
+function pick(i,v){A[i]=v;const d=document.getElementById('q'+i);d.classList.add('done');
+d.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k+1===v));
+upd();document.getElementById('res').style.display='none';
+const nx=document.getElementById('q'+(i+1));if(nx&&A[i+1]===0)setTimeout(()=>nx.scrollIntoView({behavior:'smooth',block:'center'}),150)}
+function upd(){const n=A.filter(x=>x>0).length;
+document.getElementById('pt').textContent=n+' / 17 回答';
+document.getElementById('fl').style.width=(n/17*100)+'%';
+document.getElementById('go').disabled=n<17}
+function show(){const s=A.reduce((a,b)=>a+b,0);
+let lv,c,m;
+if(s<=26){lv='症状なし（正常）';c='var(--ok)';m='現時点では、更年期症状はほとんど見られません。睡眠・運動・食事など、今の生活習慣を続けましょう。'}
+else if(s<=36){lv='軽度';c='var(--warn)';m='軽い症状が見られます。生活習慣の見直し（睡眠、適度な運動、ストレスケア）で様子を見ながら、気になる症状が続くようなら相談を考えましょう。'}
+else if(s<=49){lv='中等度';c='var(--mid)';m='中等度の症状が見られます。男性更年期に詳しい医療機関（泌尿器科・男性更年期外来など）への相談をおすすめします。'}
+else{lv='重度';c='var(--bad)';m='症状がかなり強く出ている可能性があります。早めに泌尿器科・男性更年期外来などを受診することをおすすめします。'}
+document.getElementById('sc').textContent=s;
+const l=document.getElementById('lv');l.textContent=lv;l.style.background=c;
+document.getElementById('msg').textContent=m+(A[10]>=4||A[12]>=4?' 気分の落ち込みが強いときは、一人で抱えず、かかりつけ医や心療内科・精神科にも相談してください。':'');
+document.getElementById('pin').style.left='calc('+((s-17)/68*100)+'% - 2px)';
+const r=document.getElementById('res');r.style.display='block';r.scrollIntoView({behavior:'smooth',block:'start'})}
+function reset(){A.fill(0);document.querySelectorAll('.q').forEach(d=>{d.classList.remove('done');d.querySelectorAll('button').forEach(b=>b.classList.remove('on'))});
+upd();document.getElementById('res').style.display='none';window.scrollTo({top:0,behavior:'smooth'})}
+</script>
+</body>
+</html>
